@@ -5,7 +5,8 @@ const app = express();
 const OBS_WS_URL = "ws://[fdfe:dcba:9876::1]:4455"; // اگر IP متفاوت هست، مقدار رو تغییر بده
 
 app.get("/obs-status", (req, res) => {
-  const obsSocket = new WebSocket(OBS_WS_URL);
+  res.json({ streaming: false }); // مقدار واقعی از OBS دریافت خواهد شد
+});
 
   obsSocket.on("open", () => {
     console.log("✅ اتصال به OBS برقرار شد!");
