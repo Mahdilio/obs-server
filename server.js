@@ -2,7 +2,7 @@ const WebSocket = require("ws");
 const express = require("express");
 const app = express();
 
-const OBS_WS_URL = "ws://127.0.0.1:4455";
+const OBS_WS_URL = "ws://[fdfe:dcba:9876::1]:4455";
 
 // بررسی وضعیت استریم OBS
 app.get("/obs-status", (req, res) => {
