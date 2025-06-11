@@ -2,10 +2,9 @@ const WebSocket = require("ws");
 const express = require("express");
 const app = express();
 
-// تنظیم آدرس WebSocket برای اتصال به OBS
-const OBS_WS_URL = "ws://[fdfe:dcba:9876::1]:4455";
+const OBS_WS_URL = "ws://127.0.0.1:4455"; // تغییر این مقدار در صورت نیاز
 
-// بررسی وضعیت استریم OBS
+// مسیر بررسی وضعیت OBS
 app.get("/obs-status", (req, res) => {
   try {
     const obsSocket = new WebSocket(OBS_WS_URL);
@@ -19,11 +18,11 @@ app.get("/obs-status", (req, res) => {
       try {
         const jsonResponse = JSON.parse(data);
         res.json({ streaming: jsonResponse.streaming });
+        obsSocket.close();
       } catch (parseError) {
-        console.error("❌ خطا در تجزیه JSON:", parseError);
+        console.error("❌ خطا در پردازش JSON:", parseError);
         res.status(500).json({ error: "خطا در پردازش داده‌های OBS" });
       }
-      obsSocket.close();
     });
 
     obsSocket.on("error", (err) => {
@@ -36,7 +35,16 @@ app.get("/obs-status", (req, res) => {
   }
 });
 
+// جلوگیری از بسته‌شدن سرور در Railway
+process.on("SIGTERM", () => {
+  console.log("🚨 درخواست توقف دریافت شد، اما سرور بسته نمی‌شود.");
+});
+
+process.on("SIGINT", () => {
+  console.log("🚨 درخواست خروج دریافت شد، اما سرور بسته نمی‌شود.");
+});
+
 // اجرای سرور روی پورت 3000
 app.listen(3000, () => {
-  console.log("🚀 سرور اجرا شد و منتظر درخواست‌های OBS است!");
+  console.log("🚀 سرور اجرا شد و آماده‌ی پردازش درخواست‌ها است!");
 });
