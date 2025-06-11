@@ -2,9 +2,9 @@ const WebSocket = require("ws");
 const express = require("express");
 const app = express();
 
-const OBS_WS_URL = "ws://127.0.0.1:4455"; // تغییر این مقدار در صورت نیاز
+const OBS_WS_URL = "ws://127.0.0.1:4455";
 
-// مسیر بررسی وضعیت OBS
+// بررسی وضعیت استریم OBS
 app.get("/obs-status", (req, res) => {
   try {
     const obsSocket = new WebSocket(OBS_WS_URL);
@@ -18,11 +18,11 @@ app.get("/obs-status", (req, res) => {
       try {
         const jsonResponse = JSON.parse(data);
         res.json({ streaming: jsonResponse.streaming });
-        obsSocket.close();
       } catch (parseError) {
         console.error("❌ خطا در پردازش JSON:", parseError);
         res.status(500).json({ error: "خطا در پردازش داده‌های OBS" });
       }
+      obsSocket.close();
     });
 
     obsSocket.on("error", (err) => {
