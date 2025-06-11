@@ -2,7 +2,7 @@ const WebSocket = require("ws"); // نصب WebSocket برای اتصال به OB
 const express = require("express"); // نصب Express برای مدیریت درخواست‌ها
 const app = express();
 
-const OBS_WS_URL = "ws://127.0.0.1:4455"; // اگر IP متفاوت هست، مقدار رو تغییر بده
+const OBS_WS_URL = "ws://[fdfe:dcba:9876::1]:4455"; // اگر IP متفاوت هست، مقدار رو تغییر بده
 
 app.get("/obs-status", (req, res) => {
   const obsSocket = new WebSocket(OBS_WS_URL);
