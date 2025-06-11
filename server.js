@@ -4,9 +4,9 @@ const app = express();
 
 const OBS_WS_URL = "ws://[fdfe:dcba:9876::1]:4455"; // اگر IP متفاوت هست، مقدار رو تغییر بده
 
+// بررسی وضعیت استریم OBS
 app.get("/obs-status", (req, res) => {
-  res.json({ streaming: false }); // مقدار واقعی از OBS دریافت خواهد شد
-});
+  const obsSocket = new WebSocket(OBS_WS_URL);
 
   obsSocket.on("open", () => {
     console.log("✅ اتصال به OBS برقرار شد!");
@@ -20,10 +20,12 @@ app.get("/obs-status", (req, res) => {
   });
 
   obsSocket.on("error", (err) => {
-    res.status(500).json({ error: "❌ خطا در اتصال به OBS WebSocket", details: err.message });
+    console.error("❌ خطا در اتصال به OBS WebSocket:", err);
+    res.status(500).json({ error: "خطا در اتصال به OBS", details: err.message });
   });
 });
 
+// اجرای سرور روی پورت 3000
 app.listen(3000, () => {
   console.log("🚀 سرور اجرا شد و منتظر درخواست‌های OBS است!");
 });
